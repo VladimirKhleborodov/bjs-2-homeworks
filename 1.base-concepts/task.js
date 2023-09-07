@@ -17,17 +17,6 @@ function solveEquation(a, b, c) {
 }
 
 function calculateTotalMortgage(percent, contribution, amount, countMonths) {
-	if ((typeof percent === 'string' || typeof percent === 'number') &&
-		(typeof contribution === 'string' || typeof contribution === 'number') &&
-		(typeof amount === 'string' || typeof amount === 'number') &&
-		(typeof countMonths === 'string' || typeof countMonths === 'number')) {
-		percent = parseFloat(percent);
-		contribution = parseFloat(contribution);
-		amount = parseFloat(amount);
-		countMonths = parseInt(countMonths);
-	} else {
-		return false;
-	}
 
 	let p = percent / 100 / 12;
 	let s = amount - contribution;
