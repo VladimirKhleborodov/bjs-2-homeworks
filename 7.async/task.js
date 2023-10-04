@@ -1,6 +1,4 @@
 class AlarmClock {
-	constructor() {};
-
 	alarmCollection = [];
 	intervalId = null;
 
@@ -9,11 +7,9 @@ class AlarmClock {
 			throw new Error('Отсутствуют обязательные аргументы');
 		}
 
-		this.alarmCollection.forEach(alarmObject => {
-			if (alarmObject['time'] === time) {
-				console.warn('Уже присутствует звонок на это же время');
-			}
-		});
+		if (this.alarmCollection.some(alarmObject => alarmObject.time === time)) {
+			console.warn('Уже присутствует звонок на это же время');
+		}
 
 		this.alarmCollection.push({
 			time,
@@ -23,24 +19,28 @@ class AlarmClock {
 	}
 
 	removeClock(time) {
-		this.alarmCollection = this.alarmCollection.filter(alarmObject => alarmObject['time'] !== time);
+		this.alarmCollection = this.alarmCollection.filter(alarmObject => alarmObject.time !== time);
 	}
 
 	getCurrentFormattedTime() {
-		let currentDate = new Date();
-		let hours = currentDate.getHours();
-		let minutes = currentDate.getMinutes();
-		return `${+hours.toFixed(2)}:${+minutes.toFixed(2)}`;
+		let currentDate = new Date().toLocaleTimeString("ru-Ru", {
+			hour: "2-digit",
+			minute: "2-digit",
+		});
+
+		return currentDate;
 	};
 
 	start() {
-		if (this.intervalId !== null) return;
+		if (this.intervalId !== null) {
+			return;
+		}
 
 		this.intervalId = setInterval(() => {
 			this.alarmCollection.forEach(alarmObject => {
-				if ((alarmObject['time'] === this.getCurrentFormattedTime()) && (alarmObject['canCall'] === true)) {
-					alarmObject['canCall'] = false;
-					alarmObject['callback']();
+				if ((alarmObject.time === this.getCurrentFormattedTime()) && (alarmObject.canCall === true)) {
+					alarmObject.canCall = false;
+					alarmObject.callback();
 				}
 			})
 		}, 1000);
@@ -52,7 +52,7 @@ class AlarmClock {
 	};
 
 	resetAllCalls() {
-		this.alarmCollection.forEach(alarmObject => alarmObject['canCall'] = true);
+		this.alarmCollection.forEach(alarmObject => alarmObject.canCall = true);
 	};
 
 	clearAlarms() {
